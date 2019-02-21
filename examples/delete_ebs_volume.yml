@@ -1,0 +1,16 @@
+- name: Delete EBS Volume
+  hosts: localhost
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: List Volumes
+      ec2_vol:
+        state: list
+      register: result
+
+    - name: "Delete volume"
+      ec2_vol:
+        state: absent
+        id: "{{result.volumes[0].id}}"
+      when: result.volumes | length > 0
